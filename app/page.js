@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react';
 import BotonPago from './BotonPago';
+import { getPaymentLink } from './actions'; // Importante para el pago total
 
 const PRODUCTOS = [
   { id: "1", nombre: "Proteína Whey Isolate", precio: 45000, imagen: "https://images.unsplash.com/photo-1593095194472-f2c23a0740ef?w=800" },
@@ -12,7 +13,7 @@ export default function Home() {
   const [carrito, setCarrito] = useState([]);
   const [agregadoId, setAgregadoId] = useState(null);
 
-  // FUNCIÓN CORREGIDA: Usa el estado previo para sumar correctamente cada clic
+  // 1. LÓGICA DEL CARRITO
   const agregarAlCarrito = (p) => {
     setCarrito((prev) => [...prev, p]);
     setAgregadoId(p.id);
@@ -22,10 +23,11 @@ export default function Home() {
   const vaciarCarrito = () => setCarrito([]);
   const total = carrito.reduce((acc, p) => acc + p.precio, 0);
 
+  // 2. FUNCIÓN WHATSAPP (CORREGIDA)
   const enviarWhatsApp = () => {
-    const telefono = "543810000000"; // CAMBIÁ POR TU NÚMERO (Sin el +)
+    const miNumero = "5491122334455"; // <--- PONÉ TU CELULAR ACÁ
     
-    // Agrupar por cantidad para el mensaje
+    // Agrupamos productos repetidos para que el mensaje sea corto
     const conteo = carrito.reduce((acc, p) => {
       acc[p.nombre] = (acc[p.nombre] || 0) + 1;
       return acc;
@@ -35,10 +37,9 @@ export default function Home() {
       .map(([nombre, cant]) => `• ${cant}x ${nombre}`)
       .join('\n');
 
-    const mensaje = encodeURIComponent(
-      `💪 *NUEVO PEDIDO - POWER FITNESS*\n\n${listaTexto}\n\n*TOTAL: $${total.toLocaleString('es-AR')}*\n\n¿Tienen stock disponible?`
-    );
-    window.open(`https://wa.me/${telefono}?text=${mensaje}`, '_blank');
+    const mensaje = `💪 *NUEVO PEDIDO - POWER FITNESS*\n\n${listaTexto}\n\n*TOTAL: $${total.toLocaleString('es-AR')}*\n\n¿Tienen stock disponible?`;
+    
+    window.open(`https://wa.me/${miNumero}?text=${encodeURIComponent(mensaje)}`, '_blank');
   };
 
   return (
@@ -77,10 +78,6 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col gap-3">
-                {/* Botón Pago Individual */}
-                <BotonPago producto={p} />
-                
-                {/* Botón Sumar al Carrito */}
                 <button 
                   onClick={() => agregarAlCarrito(p)}
                   className={`w-full font-black py-4 rounded-xl text-[11px] uppercase transition-all active:scale-95 border flex items-center justify-center gap-2 ${
@@ -97,25 +94,44 @@ export default function Home() {
         ))}
       </div>
 
-      {/* FOOTER FLOTANTE WHATSAPP */}
+      {/* FOOTER FLOTANTE TOTAL */}
       {carrito.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm bg-zinc-900 border border-green-500/30 p-5 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] z-50 animate-in slide-in-from-bottom-10">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm bg-zinc-900 border border-zinc-800 p-5 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] z-50 animate-in slide-in-from-bottom-10">
           <div className="flex justify-between items-center mb-5 border-b border-zinc-800 pb-3">
             <div>
-              <p className="text-[10px] font-black text-green-500 uppercase italic">Confirmar WhatsApp</p>
+              <p className="text-[10px] font-black text-zinc-500 uppercase italic">Total acumulado</p>
               <p className="text-2xl font-black text-white">${total.toLocaleString('es-AR')}</p>
             </div>
             <button onClick={vaciarCarrito} className="text-[10px] font-bold text-zinc-600 underline uppercase">Limpiar</button>
           </div>
 
-          <button 
-            onClick={enviarWhatsApp}
-            className="w-full bg-green-600 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 uppercase italic text-xs tracking-tighter shadow-xl active:scale-95 transition-all"
-          >
-            Finalizar pedido
-          </button>
+          <div className="grid grid-cols-2 gap-3">
+            <button 
+              onClick={async () => {
+                const url = await getPaymentLink(carrito);
+                if(url) window.location.href = url;
+              }}
+              className="bg-blue-600 text-white font-black py-4 rounded-2xl text-[10px] uppercase italic"
+            >
+              Pagar todo
+            </button>
+
+            <button 
+              onClick={enviarWhatsApp}
+              className="bg-green-600 text-white font-black py-4 rounded-2xl text-[10px] uppercase italic"
+            >
+              Pedir WhatsApp
+            </button>
+          </div>
         </div>
       )}
+
+      {/* FOOTER DE MARCA (Para que el scroll no tape nada) */}
+      <footer className="py-20 text-center">
+        <p className="text-zinc-800 text-[10px] font-black uppercase tracking-widest">Power Fitness © 2026</p>
+        <button onClick={() => window.location.href = '/admin'} className="mt-4 text-[10px] text-zinc-900">Acceso Staff</button>
+      </footer>
+
     </main>
   );
 }
