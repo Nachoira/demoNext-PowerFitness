@@ -3,6 +3,29 @@ import { useState } from 'react';
 import BotonPago from './BotonPago';
 import { getPaymentLink } from './actions'; // Importante para el pago total
 
+'use client'
+import { crearPago } from './actions'; // Ajustá la ruta si es necesario
+
+export default function BotonPago() {
+  const handlePagar = async () => {
+    const url = await crearPago();
+    if (url) {
+      window.location.href = url; // Te manda directo a pagar
+    } else {
+      alert("Error al conectar con Mercado Pago");
+    }
+  };
+
+  return (
+    <button 
+      onClick={handlePagar}
+      className="bg-blue-600 text-white px-4 py-2 rounded"
+    >
+      Pagar $150
+    </button>
+  );
+}
+
 const PRODUCTOS = [
   { id: "1", nombre: "Proteína Whey Isolate", precio: 1000, imagen: "https://images.unsplash.com/photo-1593095194472-f2c23a0740ef?w=800" },
   { id: "2", nombre: "Creatina Monohidrato", precio: 32000, imagen: "https://images.unsplash.com/photo-1546483875-ad9014c88eba?w=800" },
