@@ -2,8 +2,6 @@
 import { useState } from 'react';
 import BotonPago from './BotonPago';
 import { getPaymentLink } from './actions'; // Importante para el pago total
-
-'use client'
 import { crearPago } from './actions'; // Ajustá la ruta si es necesario
 
 export default function BotonPago() {
