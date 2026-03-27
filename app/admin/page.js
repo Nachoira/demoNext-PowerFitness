@@ -10,7 +10,7 @@ export default function AdminPanel() {
   
   // ESTADO PARA MANEJAR LOS PRODUCTOS EN VIVO
   const [productos, setProductos] = useState([
-    { id: 1, n: 'Whey Protein Isolate', p: 45000 },
+    { id: 1, n: 'Whey Protein Isolate', p: 1 },
     { id: 2, n: 'Creatina Monohidrato', p: 32000 },
     { id: 3, n: 'BCAA Aminoácidos', p: 28000 }
   ])

@@ -4,7 +4,7 @@ import BotonPago from './BotonPago';
 import { getPaymentLink } from './actions'; // Importante para el pago total
 
 const PRODUCTOS = [
-  { id: "1", nombre: "Proteína Whey Isolate", precio: 45000, imagen: "https://images.unsplash.com/photo-1593095194472-f2c23a0740ef?w=800" },
+  { id: "1", nombre: "Proteína Whey Isolate", precio: 1, imagen: "https://images.unsplash.com/photo-1593095194472-f2c23a0740ef?w=800" },
   { id: "2", nombre: "Creatina Monohidrato", precio: 32000, imagen: "https://images.unsplash.com/photo-1546483875-ad9014c88eba?w=800" },
   { id: "3", nombre: "BCAA Aminoácidos", precio: 28000, imagen: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800" }
 ];
