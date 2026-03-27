@@ -1,28 +1,6 @@
 'use client'
 import { useState } from 'react';
-import BotonPago from './BotonPago';
-import { getPaymentLink } from './actions'; // Importante para el pago total
-import { crearPago } from './actions'; // Ajustá la ruta si es necesario
-
-export default function BotonPago() {
-  const handlePagar = async () => {
-    const url = await crearPago();
-    if (url) {
-      window.location.href = url; // Te manda directo a pagar
-    } else {
-      alert("Error al conectar con Mercado Pago");
-    }
-  };
-
-  return (
-    <button 
-      onClick={handlePagar}
-      className="bg-blue-600 text-white px-4 py-2 rounded"
-    >
-      Pagar $150
-    </button>
-  );
-}
+import { crearPago } from './actions'; 
 
 const PRODUCTOS = [
   { id: "1", nombre: "Proteína Whey Isolate", precio: 1000, imagen: "https://images.unsplash.com/photo-1593095194472-f2c23a0740ef?w=800" },
@@ -33,6 +11,7 @@ const PRODUCTOS = [
 export default function Home() {
   const [carrito, setCarrito] = useState([]);
   const [agregadoId, setAgregadoId] = useState(null);
+  const [loadingMP, setLoadingMP] = useState(false);
 
   // 1. LÓGICA DEL CARRITO
   const agregarAlCarrito = (p) => {
@@ -44,11 +23,30 @@ export default function Home() {
   const vaciarCarrito = () => setCarrito([]);
   const total = carrito.reduce((acc, p) => acc + p.precio, 0);
 
-  // 2. FUNCIÓN WHATSAPP (CORREGIDA)
-  const enviarWhatsApp = () => {
-    const miNumero = "543865575938"; // <--- PONÉ TU CELULAR ACÁ
+  // 2. FUNCIÓN MERCADO PAGO
+  const handlePagarTodo = async () => {
+    setLoadingMP(true);
+    // Convertimos el carrito al formato que pide Mercado Pago
+    const itemsParaMP = carrito.map(p => ({
+      title: p.nombre,
+      quantity: 1,
+      unit_price: p.precio,
+      currency_id: 'ARS'
+    }));
+
+    const url = await crearPago(itemsParaMP);
     
-    // Agrupamos productos repetidos para que el mensaje sea corto
+    if (url) {
+      window.location.href = url;
+    } else {
+      alert("Error al conectar con Mercado Pago");
+      setLoadingMP(false);
+    }
+  };
+
+  // 3. FUNCIÓN WHATSAPP
+  const enviarWhatsApp = () => {
+    const miNumero = "543865575938"; 
     const conteo = carrito.reduce((acc, p) => {
       acc[p.nombre] = (acc[p.nombre] || 0) + 1;
       return acc;
@@ -59,7 +57,6 @@ export default function Home() {
       .join('\n');
 
     const mensaje = `💪 *NUEVO PEDIDO - POWER FITNESS*\n\n${listaTexto}\n\n*TOTAL: $${total.toLocaleString('es-AR')}*\n\n¿Tienen stock disponible?`;
-    
     window.open(`https://wa.me/${miNumero}?text=${encodeURIComponent(mensaje)}`, '_blank');
   };
 
@@ -128,13 +125,11 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-3">
             <button 
-              onClick={async () => {
-                const url = await getPaymentLink(carrito);
-                if(url) window.location.href = url;
-              }}
-              className="bg-blue-600 text-white font-black py-4 rounded-2xl text-[10px] uppercase italic"
+              onClick={handlePagarTodo}
+              disabled={loadingMP}
+              className="bg-blue-600 text-white font-black py-4 rounded-2xl text-[10px] uppercase italic disabled:opacity-50"
             >
-              Pagar todo
+              {loadingMP ? "Cargando..." : "Pagar todo"}
             </button>
 
             <button 
@@ -147,7 +142,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* FOOTER DE MARCA (Para que el scroll no tape nada) */}
+      {/* FOOTER DE MARCA */}
       <footer className="py-20 text-center">
         <p className="text-zinc-800 text-[10px] font-black uppercase tracking-widest">Power Fitness © 2026</p>
         <button onClick={() => window.location.href = '/admin'} className="mt-4 text-[10px] text-zinc-900">Acceso Staff</button>
