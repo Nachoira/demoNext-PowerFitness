@@ -25,7 +25,7 @@ export default function Home() {
 
   // 2. FUNCIÓN WHATSAPP (CORREGIDA)
   const enviarWhatsApp = () => {
-    const miNumero = "5491122334455"; // <--- PONÉ TU CELULAR ACÁ
+    const miNumero = "543865575938"; // <--- PONÉ TU CELULAR ACÁ
     
     // Agrupamos productos repetidos para que el mensaje sea corto
     const conteo = carrito.reduce((acc, p) => {

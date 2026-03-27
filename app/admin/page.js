@@ -5,121 +5,71 @@ export default function AdminPanel() {
   const [auth, setAuth] = useState(false)
   const [pass, setPass] = useState('')
 
-  // Función de entrada simple para la demo
-  const handleLogin = () => {
-    if (pass === '1234') setAuth(true)
-    else alert('PIN INCORRECTO')
-  }
-
   if (!auth) {
     return (
       <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
-        <div className="w-full max-w-xs space-y-6 text-center">
-          <h1 className="text-3xl font-black italic uppercase tracking-tighter">
-            STAFF <span className="text-red-600">POWER</span>
-          </h1>
-          <div className="space-y-2">
-            <input 
-              type="password" 
-              placeholder="INGRESE PIN" 
-              className="bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl w-full text-center font-bold text-xl focus:border-red-600 outline-none transition-all"
-              onChange={(e) => setPass(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-            />
-            <button 
-              onClick={handleLogin}
-              className="bg-red-600 w-full py-4 rounded-2xl font-black uppercase italic hover:bg-red-700 transition-all shadow-lg shadow-red-600/20"
-            >
-              ACCEDER AL SISTEMA
-            </button>
-          </div>
-        </div>
+        <h1 className="text-xl font-black mb-8 italic uppercase tracking-tighter text-red-600 text-center">
+          SISTEMA DE GESTIÓN<br/><span className="text-white text-sm">POWER FITNESS</span>
+        </h1>
+        <input 
+          type="password" 
+          placeholder="PIN DE SEGURIDAD" 
+          className="bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl mb-4 w-full max-w-xs text-center font-bold"
+          onChange={(e) => setPass(e.target.value)}
+        />
+        <button 
+          onClick={() => pass === '1234' ? setAuth(true) : alert('PIN INCORRECTO')}
+          className="bg-white text-black w-full max-w-xs py-4 rounded-2xl font-black uppercase italic text-xs hover:bg-zinc-200 transition-all"
+        >
+          ENTRAR AL EDITOR
+        </button>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 p-6 font-sans">
-      {/* HEADER DASHBOARD */}
-      <header className="flex justify-between items-center mb-8 border-b border-zinc-900 pb-6">
-        <div>
-          <h1 className="text-2xl font-black italic uppercase leading-none">DASHBOARD</h1>
-          <p className="text-[10px] text-zinc-500 font-bold uppercase mt-1">Control de Inventario y Ventas</p>
-        </div>
-        <button onClick={() => window.location.href = '/'} className="bg-zinc-900 p-3 rounded-xl border border-zinc-800 text-[10px] font-black uppercase italic">Salir</button>
-      </header>
-
-      <div className="grid gap-6">
-        
-        {/* MÉTRICAS RÁPIDAS */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-zinc-900/50 p-5 rounded-3xl border border-zinc-800">
-            <p className="text-[9px] font-black text-zinc-500 uppercase mb-1">Ventas Hoy</p>
-            <p className="text-2xl font-black italic">$142.500</p>
-            <span className="text-[9px] text-green-500 font-bold">+12% vs ayer</span>
-          </div>
-          <div className="bg-zinc-900/50 p-5 rounded-3xl border border-zinc-800">
-            <p className="text-[9px] font-black text-zinc-500 uppercase mb-1">Pedidos Pendientes</p>
-            <p className="text-2xl font-black italic text-red-600">05</p>
-            <span className="text-[9px] text-zinc-600 font-bold">Por WhatsApp</span>
-          </div>
-        </div>
-
-        {/* CONTROL DE STOCK VISUAL */}
-        <div className="bg-zinc-950 p-6 rounded-[2.5rem] border border-zinc-900 shadow-2xl">
-          <h2 className="text-xs font-black uppercase italic mb-6 text-zinc-400 tracking-widest">Estado del Stock</h2>
-          
-          <div className="space-y-6">
-            {/* ITEM 1 */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-[10px] font-black uppercase">
-                <span>Whey Protein Isolate</span>
-                <span className="text-zinc-500">12 / 20</span>
-              </div>
-              <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
-                <div className="h-full bg-red-600 rounded-full w-[60%] shadow-[0_0_10px_rgba(220,38,38,0.5)]"></div>
-              </div>
-            </div>
-
-            {/* ITEM 2 */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-[10px] font-black uppercase">
-                <span>Creatina Monohidrato</span>
-                <span className="text-red-500 font-bold italic">¡STOCK BAJO!</span>
-              </div>
-              <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
-                <div className="h-full bg-yellow-500 rounded-full w-[15%] shadow-[0_0_10px_rgba(234,179,8,0.5)] animate-pulse"></div>
-              </div>
-            </div>
-
-            {/* ITEM 3 */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-[10px] font-black uppercase">
-                <span>BCAA 2:1:1</span>
-                <span className="text-zinc-500">Full</span>
-              </div>
-              <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
-                <div className="h-full bg-green-600 rounded-full w-[90%]"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ACCIONES DE ADMINISTRADOR */}
-        <div className="grid grid-cols-1 gap-3">
-          <button className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase italic text-[11px] hover:scale-[1.02] transition-transform">
-            + Cargar Nuevo Producto
-          </button>
-          <button className="w-full bg-zinc-900 border border-zinc-800 text-zinc-400 py-4 rounded-2xl font-black uppercase italic text-[11px]">
-            Descargar Reporte Mensual
-          </button>
-        </div>
-
+    <div className="min-h-screen bg-black text-white p-4 font-sans max-w-lg mx-auto">
+      {/* CABECERA SIMPLE */}
+      <div className="flex justify-between items-end mb-8 pt-4">
+        <h1 className="text-2xl font-black italic uppercase leading-none">Editor de Productos</h1>
+        <button onClick={() => window.location.href = '/'} className="text-[10px] font-bold uppercase text-zinc-500 underline">Salir</button>
       </div>
 
-      <footer className="mt-10 text-center">
-        <p className="text-[8px] text-zinc-800 font-black uppercase tracking-[.5em]">Sistema de Gestión v1.0</p>
-      </footer>
+      {/* BOTÓN AGREGAR (PRINCIPAL) */}
+      <button className="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase italic text-xs mb-8 shadow-lg shadow-red-600/20">
+        + Cargar Nuevo Producto
+      </button>
+
+      {/* LISTA DE EDICIÓN */}
+      <div className="space-y-3">
+        {[
+          { id: 1, n: 'Whey Protein Isolate', p: 45000 },
+          { id: 2, n: 'Creatina Monohidrato', p: 32000 },
+          { id: 3, n: 'BCAA Aminoácidos', p: 28000 }
+        ].map((item) => (
+          <div key={item.id} className="bg-zinc-900 border border-zinc-800 p-5 rounded-3xl flex justify-between items-center group">
+            <div className="flex flex-col">
+              <span className="text-[10px] text-zinc-500 font-bold uppercase mb-1">Nombre</span>
+              <span className="text-sm font-black uppercase italic mb-2">{item.n}</span>
+              <span className="text-[10px] text-zinc-500 font-bold uppercase mb-1">Precio</span>
+              <span className="text-lg font-black text-white">${item.p.toLocaleString('es-AR')}</span>
+            </div>
+            
+            <div className="flex flex-col gap-2">
+              <button className="bg-zinc-800 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-colors">
+                Editar
+              </button>
+              <button className="bg-zinc-800 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-colors">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-12 text-center text-[8px] text-zinc-800 font-black uppercase tracking-widest">
+        POWER FITNESS v1.0 - SIN BASE DE DATOS ACTIVA
+      </p>
     </div>
   )
 }
