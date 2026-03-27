@@ -5,6 +5,19 @@ const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN 
 });
 
+export async function verificarPin (pinQueIngresaUsuario) {
+  const claveCorrecta = process.env.ADMIN_PIN;
+
+  if (pinQueIngresaUsuario===claveCorrecta){
+    return true;
+  }
+    else {
+           return  false;
+    }
+  }
+
+
+
 export async function getPaymentLink(carrito) {
   const preference = new Preference(client);
   

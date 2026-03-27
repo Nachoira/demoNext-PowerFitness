@@ -1,5 +1,8 @@
 'use client'
 import { useState } from 'react'
+import { verificarPin } from '../actions'
+
+
 
 export default function AdminPanel() {
   const [auth, setAuth] = useState(false)
@@ -16,6 +19,17 @@ export default function AdminPanel() {
   const [mostrarForm, setMostrarForm] = useState(false)
   const [nuevoNombre, setNuevoNombre] = useState('')
   const [nuevoPrecio, setNuevoPrecio] = useState('')
+
+  // CODIGO LOGIN
+  const manejarLogin = async () => {
+    const esValido = await verificarPin(pass); // Llamamos al servidor
+    if (esValido) {
+      setAuth(true);
+    } else {
+      alert('PIN INCORRECTO');
+      setPass(''); // Limpiamos el input por seguridad
+    }
+  };
 
   const agregarProducto = () => {
     if (!nuevoNombre || !nuevoPrecio) return alert("Completá todos los campos")
