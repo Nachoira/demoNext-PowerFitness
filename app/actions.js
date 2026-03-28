@@ -44,7 +44,7 @@ export async function crearPago(items) {
 // Agregamos esta función para que el build del Admin no explote
 export async function verificarPin(pin) {
   // Cambiá "1234" por el pin que quieras usar para tu panel
-  return pin === "1234";
+  return pin === ADMIN_PIN;
 }
 
 // Creamos un alias por si algún componente todavía busca 'getPaymentLink'
